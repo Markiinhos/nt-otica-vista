@@ -19,6 +19,9 @@
  */
 
 @theme inline {
+  --font-display: "Sora", sans-serif;
+  --font-body: "Inter", sans-serif;
+  --color-lime-accent: var(--lime-accent);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);
