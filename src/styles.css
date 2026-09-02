@@ -22,6 +22,7 @@
   --font-display: "Sora", sans-serif;
   --font-body: "Inter", sans-serif;
   --color-lime-accent: var(--lime-accent);
+  --color-whatsapp: oklch(0.65 0.2 145);
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
   --radius-lg: var(--radius);

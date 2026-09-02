@@ -265,7 +265,7 @@ function Index() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Conversar no WhatsApp"
-        className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-[oklch(0.65_0.2_145)] text-white shadow-[0_10px_30px_-6px_oklch(0.65_0.2_145/0.6)] transition-transform duration-300 hover:scale-110 active:scale-95 sm:h-16 sm:w-16"
+        className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-whatsapp text-primary-foreground shadow-[0_10px_30px_-6px_oklch(0.65_0.2_145/0.6)] transition-transform duration-300 hover:scale-110 active:scale-95 sm:h-16 sm:w-16"
       >
         <MessageCircle className="h-7 w-7" fill="currentColor" />
       </a>
