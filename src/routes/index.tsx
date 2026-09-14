@@ -56,8 +56,8 @@ export const Route = createFileRoute("/")({
             {
               "@type": "OpeningHoursSpecification",
               dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              opens: "09:00",
-              closes: "18:00",
+              opens: "08:30",
+              closes: "17:00",
             },
             {
               "@type": "OpeningHoursSpecification",
@@ -209,7 +209,7 @@ function Index() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   Segunda a sexta
                 </p>
-                <p className="mt-2 text-2xl font-bold">09h às 18h</p>
+                <p className="mt-2 text-2xl font-bold">08:30 às 17:00</p>
               </div>
               <div className="rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
