@@ -16,7 +16,7 @@ const MAPS_EMBED_URL =
   "https://www.google.com/maps?q=" +
   encodeURIComponent("Av. Sete de Setembro, 400, Dois de Julho, Salvador, BA") +
   "&output=embed";
-const GOOGLE_REVIEW_URL = import.meta.env.VITE_GOOGLE_REVIEW_URL;
+const GOOGLE_REVIEW_URL = import.meta.env["VITE_GOOGLE_REVIEW_URL"];
 const HAS_GOOGLE_REVIEW_URL = Boolean(
   GOOGLE_REVIEW_URL && !GOOGLE_REVIEW_URL.includes("INSERIR_") && GOOGLE_REVIEW_URL.startsWith("https://"),
 );

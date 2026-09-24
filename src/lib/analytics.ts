@@ -28,8 +28,8 @@ declare global {
 
 const CONSENT_KEY = "nt_oticas_analytics_consent";
 const ATTRIBUTION_KEY = "nt_oticas_session_attribution";
-const GA4_MEASUREMENT_ID = import.meta.env.VITE_LOVABLE_CONNECTOR_GOOGLE_ANALYTICS_API_KEY;
-const META_PIXEL_ID = import.meta.env.VITE_META_PIXEL_ID;
+const GA4_MEASUREMENT_ID = import.meta.env["VITE_LOVABLE_CONNECTOR_GOOGLE_ANALYTICS_API_KEY"];
+const META_PIXEL_ID = import.meta.env["VITE_META_PIXEL_ID"];
 const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id"] as const;
 
 let initialized = false;
@@ -47,14 +47,18 @@ function inferAttribution(): TrafficAttribution {
   const hasAdClickId = ["gclid", "gbraid", "wbraid", "fbclid", "ttclid"].some((key) => search.has(key));
 
   if (source || medium || campaign) {
-    return {
+    const attribution: TrafficAttribution = {
       source: source || "unknown",
       medium: medium || (hasAdClickId ? "paid" : "unknown"),
       campaign: campaign || "(not set)",
-      content: search.get("utm_content") || undefined,
-      term: search.get("utm_term") || undefined,
-      campaign_id: search.get("utm_id") || undefined,
     };
+    const content = search.get("utm_content");
+    const term = search.get("utm_term");
+    const campaignId = search.get("utm_id");
+    if (content) attribution.content = content;
+    if (term) attribution.term = term;
+    if (campaignId) attribution.campaign_id = campaignId;
+    return attribution;
   }
 
   if (hasAdClickId) {
@@ -136,7 +140,7 @@ function loadGoogleAnalytics() {
   const script = document.createElement("script");
   script.async = true;
   script.src = `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(GA4_MEASUREMENT_ID)}`;
-  script.dataset.ntGa4 = "true";
+  script.dataset["ntGa4"] = "true";
   document.head.appendChild(script);
 
   window.dataLayer = window.dataLayer || [];
@@ -161,8 +165,7 @@ function loadMetaPixel() {
   const fbq = function (...args: unknown[]) {
     if (fbq.callMethod) fbq.callMethod(...args);
     else fbq.queue?.push(args);
-  } as Window["fbq"];
-  if (!fbq) return;
+  } as NonNullable<Window["fbq"]>;
   fbq.queue = [];
   fbq.loaded = true;
   fbq.version = "2.0";
@@ -172,7 +175,7 @@ function loadMetaPixel() {
   const script = document.createElement("script");
   script.async = true;
   script.src = "https://connect.facebook.net/en_US/fbevents.js";
-  script.dataset.ntMetaPixel = "true";
+  script.dataset["ntMetaPixel"] = "true";
   document.head.appendChild(script);
   fbq("init", META_PIXEL_ID);
 }
