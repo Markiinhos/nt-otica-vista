@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { trackContact, trackEvent } from "@/lib/analytics";
 
 const WHATSAPP_URL =
-  "https://wa.me/557130339834?text=" +
-  encodeURIComponent("Olá! Vim pelo site da NT Óticas e gostaria de saber mais.");
+  "https://wa.me/5571988448564?text=" +
+  encodeURIComponent("Olá, quero saber maiores informações sobre seu produto");
 
 const ADDRESS = "Av. Sete de Setembro, 400 – Loja 139, Dois de Julho, Salvador – BA";
 const MAPS_DIRECTIONS_URL =
@@ -96,7 +96,7 @@ function WhatsAppButton({
     const parameters = {
       button_name: buttonName,
       button_location: location,
-      phone: "557130339834",
+      phone: "5571988448564",
     };
     trackContact(parameters);
     if (ctaEvent) trackEvent(ctaEvent, parameters);
@@ -341,7 +341,7 @@ function Index() {
           const parameters = {
             button_name: "WhatsApp flutuante",
             button_location: "floating_button",
-            phone: "557130339834",
+            phone: "5571988448564",
           };
           trackContact(parameters);
           trackEvent("floating_whatsapp_click", parameters);
