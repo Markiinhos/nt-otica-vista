@@ -195,7 +195,17 @@ export function setConsentChoice(choice: ConsentChoice) {
   } catch {
     // The choice remains valid for the current page if storage is unavailable.
   }
-  if (choice === "accepted") initializeAnalytics();
+  if (choice === "accepted") {
+    initializeAnalytics();
+  } else {
+    window.gtag?.("consent", "update", {
+      analytics_storage: "denied",
+      ad_storage: "denied",
+      ad_user_data: "denied",
+      ad_personalization: "denied",
+    });
+    window.fbq?.("consent", "revoke");
+  }
 }
 
 export function initializeAnalytics() {
