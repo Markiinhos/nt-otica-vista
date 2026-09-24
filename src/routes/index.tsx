@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, MapPin, MessageCircle, Navigation, Star } from "lucide-react";
+import { Clock, Instagram, MapPin, MessageCircle, Navigation, Star } from "lucide-react";
 import logoAsset from "../assets/logo-nt-oticas.jpg.asset.json";
 import { AnalyticsConsent } from "@/components/analytics-consent";
 import { Button } from "@/components/ui/button";
@@ -16,10 +16,8 @@ const MAPS_EMBED_URL =
   "https://www.google.com/maps?q=" +
   encodeURIComponent("Av. Sete de Setembro, 400, Dois de Julho, Salvador, BA") +
   "&output=embed";
-const GOOGLE_REVIEW_URL = import.meta.env["VITE_GOOGLE_REVIEW_URL"];
-const HAS_GOOGLE_REVIEW_URL = Boolean(
-  GOOGLE_REVIEW_URL && !GOOGLE_REVIEW_URL.includes("INSERIR_") && GOOGLE_REVIEW_URL.startsWith("https://"),
-);
+const GOOGLE_REVIEW_URL = "https://share.google/F1GeGXrGzZLBnGmbX";
+const INSTAGRAM_URL = "https://www.instagram.com/ntoticas/";
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -219,6 +217,50 @@ function Index() {
                 allowFullScreen
               />
             </div>
+            <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-auto w-full rounded-full border-primary/30 bg-background px-7 py-3.5 text-base font-semibold text-primary shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:bg-primary/5 hover:text-primary sm:w-auto"
+              >
+                <a
+                  href={GOOGLE_REVIEW_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEvent("google_review_click", {
+                      button_name: "Nos avalie no Google",
+                      button_location: "below_map",
+                    })
+                  }
+                >
+                  <Star className="text-chart-4" fill="currentColor" />
+                  Nos avalie no Google
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="h-auto w-full rounded-full border-foreground/15 bg-background px-7 py-3.5 text-base font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary sm:w-auto"
+              >
+                <a
+                  href={INSTAGRAM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() =>
+                    trackEvent("instagram_click", {
+                      button_name: "Instagram da NT Óticas",
+                      button_location: "below_map",
+                    })
+                  }
+                >
+                  <Instagram />
+                  Instagram da NT Óticas
+                </a>
+              </Button>
+            </div>
           </div>
         </section>
 
@@ -269,44 +311,6 @@ function Index() {
           </div>
         </section>
 
-         {/* Avaliação no Google */}
-         <section className="border-t border-border/60 py-16 sm:py-24">
-           <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
-             <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-lime-accent/20 text-foreground">
-               <Star className="h-6 w-6" fill="currentColor" />
-             </span>
-             <p className="mt-5 text-sm font-semibold uppercase tracking-widest text-primary">Ajude a NT Óticas</p>
-             <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Gostou da NT Óticas?</h2>
-             <p className="mx-auto mt-4 max-w-lg text-base text-muted-foreground sm:text-lg">
-               Se você teve uma boa experiência conosco, deixe sua avaliação no Google. Sua experiência é muito importante para nós.
-             </p>
-             <div className="mt-8">
-               {HAS_GOOGLE_REVIEW_URL ? (
-                 <Button asChild size="lg" className="h-auto rounded-full px-8 py-4 text-base sm:text-lg">
-                   <a
-                     href={GOOGLE_REVIEW_URL}
-                     target="_blank"
-                     rel="noopener noreferrer"
-                     onClick={() =>
-                       trackEvent("google_review_click", {
-                         button_name: "Avaliar no Google",
-                         button_location: "google_review_section",
-                       })
-                     }
-                   >
-                     <Star fill="currentColor" />
-                     Avaliar no Google
-                   </a>
-                 </Button>
-               ) : (
-                 <Button size="lg" disabled className="h-auto rounded-full px-8 py-4 text-base sm:text-lg">
-                   <Star fill="currentColor" />
-                   Avaliar no Google
-                 </Button>
-               )}
-             </div>
-           </div>
-         </section>
       </main>
 
       {/* Rodapé */}

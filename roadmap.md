@@ -1,7 +1,6 @@
 # Roadmap
 
-- [x] Implementar GA4, Meta Pixel, UTMs e eventos de conversão
-- [x] Adicionar consentimento e política de privacidade/cookies
-- [x] Adicionar avaliação no Google configurável
-- [x] Atualizar horário e SEO local
-- [x] Validar desktop, celular, links, consentimento e rastreamento
+- [x] Posicionar a avaliação no Google logo abaixo do mapa, sem nova seção
+- [x] Usar o link oficial de avaliação e ajustar o visual do botão
+- [x] Adicionar acesso direto ao Instagram da loja
+- [x] Validar os links e o visual em desktop e celular
