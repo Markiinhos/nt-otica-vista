@@ -1,6 +1,9 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Clock, MapPin, MessageCircle, Navigation } from "lucide-react";
+import { Clock, MapPin, MessageCircle, Navigation, Star } from "lucide-react";
 import logoAsset from "../assets/logo-nt-oticas.jpg.asset.json";
+import { AnalyticsConsent } from "@/components/analytics-consent";
+import { Button } from "@/components/ui/button";
+import { trackContact, trackEvent } from "@/lib/analytics";
 
 const WHATSAPP_URL =
   "https://wa.me/557130339834?text=" +
@@ -13,6 +16,10 @@ const MAPS_EMBED_URL =
   "https://www.google.com/maps?q=" +
   encodeURIComponent("Av. Sete de Setembro, 400, Dois de Julho, Salvador, BA") +
   "&output=embed";
+const GOOGLE_REVIEW_URL = import.meta.env.VITE_GOOGLE_REVIEW_URL;
+const HAS_GOOGLE_REVIEW_URL = Boolean(
+  GOOGLE_REVIEW_URL && !GOOGLE_REVIEW_URL.includes("INSERIR_") && GOOGLE_REVIEW_URL.startsWith("https://"),
+);
 
 export const Route = createFileRoute("/")({
   component: Index,
@@ -22,13 +29,13 @@ export const Route = createFileRoute("/")({
       {
         name: "description",
         content:
-          "NT Óticas em Salvador. Encontre sua ótica, confira nosso horário de funcionamento e fale conosco pelo WhatsApp.",
+          "NT Óticas em Salvador. Confira nosso horário de funcionamento, localização e fale conosco pelo WhatsApp.",
       },
       { property: "og:title", content: "NT Óticas | Sua visão em boas mãos" },
       {
         property: "og:description",
         content:
-          "NT Óticas em Salvador. Encontre sua ótica, confira nosso horário de funcionamento e fale conosco pelo WhatsApp.",
+            "NT Óticas em Salvador. Confira nosso horário de funcionamento, localização e fale conosco pelo WhatsApp.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/" },
@@ -56,8 +63,8 @@ export const Route = createFileRoute("/")({
             {
               "@type": "OpeningHoursSpecification",
               dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
-              opens: "08:30",
-              closes: "17:00",
+               opens: "09:00",
+               closes: "18:00",
             },
             {
               "@type": "OpeningHoursSpecification",
@@ -75,24 +82,40 @@ export const Route = createFileRoute("/")({
 function WhatsAppButton({
   children,
   size = "default",
+  location,
+  ctaEvent,
   className = "",
 }: {
   children: React.ReactNode;
   size?: "default" | "lg";
+  location: "header" | "hero" | "contact_section" | "footer";
+  ctaEvent?: "cta_hero_click" | "cta_contact_click";
   className?: string;
 }) {
+  const buttonName = typeof children === "string" ? children : "Falar no WhatsApp";
+
+  const handleClick = () => {
+    const parameters = {
+      button_name: buttonName,
+      button_location: location,
+      phone: "557130339834",
+    };
+    trackContact(parameters);
+    if (ctaEvent) trackEvent(ctaEvent, parameters);
+  };
+
   return (
-    <a
-      href={WHATSAPP_URL}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={`inline-flex items-center justify-center gap-2 rounded-full bg-primary font-semibold text-primary-foreground shadow-[0_8px_24px_-8px_oklch(0.66_0.19_50/0.5)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_12px_28px_-8px_oklch(0.66_0.19_50/0.6)] ${
+    <Button
+      asChild
+      className={`h-auto rounded-full font-semibold shadow-lg transition-all duration-300 hover:-translate-y-0.5 ${
         size === "lg" ? "px-8 py-4 text-base sm:text-lg" : "px-5 py-2.5 text-sm"
       } ${className}`}
     >
-      <MessageCircle className={size === "lg" ? "h-5 w-5" : "h-4 w-4"} />
-      {children}
-    </a>
+      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" onClick={handleClick}>
+        <MessageCircle className={size === "lg" ? "h-5 w-5" : "h-4 w-4"} />
+        {children}
+      </a>
+    </Button>
   );
 }
 
@@ -112,7 +135,7 @@ function Index() {
               NT Óticas
             </span>
           </a>
-          <WhatsAppButton className="shrink-0">Falar no WhatsApp</WhatsAppButton>
+           <WhatsAppButton location="header" className="shrink-0">Falar no WhatsApp</WhatsAppButton>
         </div>
       </header>
 
@@ -143,7 +166,7 @@ function Index() {
               Cuide da sua visão com quem entende de você.
             </p>
             <div className="mt-8">
-              <WhatsAppButton size="lg">Falar pelo WhatsApp</WhatsAppButton>
+               <WhatsAppButton size="lg" location="hero" ctaEvent="cta_hero_click">Falar pelo WhatsApp</WhatsAppButton>
             </div>
             <p className="mt-5 inline-flex items-center gap-1.5 text-sm text-muted-foreground">
               <MapPin className="h-4 w-4 text-primary" />
@@ -174,6 +197,12 @@ function Index() {
                 href={MAPS_DIRECTIONS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() =>
+                  trackEvent("maps_click", {
+                    button_name: "Como chegar",
+                    button_location: "location_section",
+                  })
+                }
                 className="mt-6 inline-flex items-center gap-2 rounded-full border border-foreground/15 px-5 py-2.5 text-sm font-semibold transition-all duration-300 hover:-translate-y-0.5 hover:border-primary hover:text-primary"
               >
                 <Navigation className="h-4 w-4" />
@@ -209,7 +238,7 @@ function Index() {
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
                   Segunda a sexta
                 </p>
-                <p className="mt-2 text-2xl font-bold">08:30 às 17:00</p>
+                 <p className="mt-2 text-2xl font-bold">09h às 18h</p>
               </div>
               <div className="rounded-2xl border border-border bg-card p-6 transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
                 <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
@@ -235,10 +264,49 @@ function Index() {
               Fale com nossa equipe pelo WhatsApp e tire suas dúvidas.
             </p>
             <div className="mt-8">
-              <WhatsAppButton size="lg">Chamar no WhatsApp</WhatsAppButton>
+               <WhatsAppButton size="lg" location="contact_section" ctaEvent="cta_contact_click">Chamar no WhatsApp</WhatsAppButton>
             </div>
           </div>
         </section>
+
+         {/* Avaliação no Google */}
+         <section className="border-t border-border/60 py-16 sm:py-24">
+           <div className="mx-auto max-w-2xl px-4 text-center sm:px-6">
+             <span className="mx-auto grid h-12 w-12 place-items-center rounded-full bg-lime-accent/20 text-foreground">
+               <Star className="h-6 w-6" fill="currentColor" />
+             </span>
+             <p className="mt-5 text-sm font-semibold uppercase tracking-widest text-primary">Ajude a NT Óticas</p>
+             <h2 className="mt-2 text-3xl font-bold sm:text-4xl">Gostou da NT Óticas?</h2>
+             <p className="mx-auto mt-4 max-w-lg text-base text-muted-foreground sm:text-lg">
+               Se você teve uma boa experiência conosco, deixe sua avaliação no Google. Sua experiência é muito importante para nós.
+             </p>
+             <div className="mt-8">
+               {HAS_GOOGLE_REVIEW_URL ? (
+                 <Button asChild size="lg" className="h-auto rounded-full px-8 py-4 text-base sm:text-lg">
+                   <a
+                     href={GOOGLE_REVIEW_URL}
+                     target="_blank"
+                     rel="noopener noreferrer"
+                     onClick={() =>
+                       trackEvent("google_review_click", {
+                         button_name: "Avaliar no Google",
+                         button_location: "google_review_section",
+                       })
+                     }
+                   >
+                     <Star fill="currentColor" />
+                     Avaliar no Google
+                   </a>
+                 </Button>
+               ) : (
+                 <Button size="lg" disabled className="h-auto rounded-full px-8 py-4 text-base sm:text-lg">
+                   <Star fill="currentColor" />
+                   Avaliar no Google
+                 </Button>
+               )}
+             </div>
+           </div>
+         </section>
       </main>
 
       {/* Rodapé */}
@@ -252,7 +320,7 @@ function Index() {
           <p className="font-display text-lg font-bold">NT Óticas</p>
           <p className="text-sm text-primary font-semibold">Sua visão em boas mãos!</p>
           <p className="text-sm text-muted-foreground">Salvador – Bahia</p>
-          <WhatsAppButton>Falar no WhatsApp</WhatsAppButton>
+           <WhatsAppButton location="footer">Falar no WhatsApp</WhatsAppButton>
           <p className="mt-4 text-xs text-muted-foreground">
             © NT Óticas – Todos os direitos reservados.
           </p>
@@ -265,10 +333,20 @@ function Index() {
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Conversar no WhatsApp"
+        onClick={() => {
+          const parameters = {
+            button_name: "WhatsApp flutuante",
+            button_location: "floating_button",
+            phone: "557130339834",
+          };
+          trackContact(parameters);
+          trackEvent("floating_whatsapp_click", parameters);
+        }}
         className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-whatsapp text-primary-foreground shadow-[0_10px_30px_-6px_oklch(0.65_0.2_145/0.6)] transition-transform duration-300 hover:scale-110 active:scale-95 sm:h-16 sm:w-16"
       >
         <MessageCircle className="h-7 w-7" fill="currentColor" />
       </a>
+      <AnalyticsConsent />
     </div>
   );
 }
